@@ -6,10 +6,10 @@ if [ -z "$FILE" ]; then
   exit 1
 fi
 
-if [ -z "$GH_TOKEN" ]; then
-  echo "GH_TOKEN environment variable not set"
+if [ -z "$CLOUD_REPOSITORY_APIKEY" ]; then
+  echo "CLOUD_REPOSITORY_APIKEY environment variable not set"
   exit 1
 fi
 
-echo "GH_TOKEN set as ${GH_TOKEN}"
-curl -H "GITHUB-TOKEN: ${GH_TOKEN}" -F "file=@${FILE}" http://localhost:5000/
+echo "CLOUD_REPOSITORY_APIKEY set as ${CLOUD_REPOSITORY_APIKEY}"
+curl -H "CLOUD-REPOSITORY-APIKEY: ${CLOUD_REPOSITORY_APIKEY}" -F "file=@${FILE}" http://localhost:5000/

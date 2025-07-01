@@ -2,7 +2,7 @@ from flask import Flask, request, send_from_directory, redirect, url_for, render
 import os
 
 # Expected GitHub token for uploads
-EXPECTED_TOKEN = os.environ.get('GH_TOKEN')
+EXPECTED_TOKEN = os.environ.get('CLOUD_REPOSITORY_APIKEY')
 
 app = Flask(__name__)
 UPLOAD_FOLDER = os.path.join(app.root_path, 'uploads')
@@ -12,7 +12,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        token = request.headers.get('GITHUB-TOKEN')
+        token = request.headers.get('CLOUD-REPOSITORY-APIKEY')
         if not token or token != EXPECTED_TOKEN:
             return 'Unauthorized', 403
         if 'file' not in request.files:
