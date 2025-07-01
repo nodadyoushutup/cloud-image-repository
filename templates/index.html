@@ -4,17 +4,32 @@
     <meta charset="utf-8">
     <title>NoDadYouShutUp Cloud Image Repository</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p4dVfhdGV6Uq4fOxRmSEgYJJ5B3nwr1s64X2T4mxTsnRa1zsvtl1wIJ5e2x0VkDb+xWla38m0XpFPJKh+w6BmA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
     <div class="p-4">
-        <h1 class="text-3xl font-bold mb-4">NoDadYouShutUp Cloud Image Repository</h1>
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-3xl font-bold">NoDadYouShutUp Cloud Image Repository</h1>
+            {% if logged_in %}
+            <a href="{{ url_for('logout') }}" class="text-sm text-gray-400 hover:text-gray-200">Logout</a>
+            {% else %}
+            <a href="{{ url_for('github.login') }}" class="text-sm text-gray-400 hover:text-gray-200">Login</a>
+            {% endif %}
+        </div>
         <input id="filterInput" type="text" placeholder="Filter files..." class="mb-4 px-2 py-1 text-gray-900 rounded" />
         <ul id="fileList" class="mb-6 space-y-1">
             {% for file in files %}
-            <li data-name="{{ file.image }}" class="space-x-2">
+            <li data-name="{{ file.image }}" class="space-x-2 flex items-center">
                 <a class="px-2 py-1 rounded hover:bg-gray-800" href="{{ url_for('uploaded_file', filename=file.image) }}">{{ file.image }}</a>
                 {% if file.sha256 %}
                 <a class="px-2 py-1 rounded hover:bg-gray-800" href="{{ url_for('uploaded_file', filename=file.sha256) }}">{{ file.sha256 }}</a>
+                {% endif %}
+                {% if logged_in %}
+                <form method="post" action="{{ url_for('delete_file', filename=file.image) }}" class="inline">
+                    <button type="submit" class="text-red-500 hover:text-red-700 ml-2">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </form>
                 {% endif %}
             </li>
             {% else %}
