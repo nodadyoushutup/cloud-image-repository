@@ -6,4 +6,9 @@ if [ -z "$FILE" ]; then
   exit 1
 fi
 
-curl -F "file=@${FILE}" http://localhost:5000/
+if [ -z "$GH_TOKEN" ]; then
+  echo "GH_TOKEN environment variable not set"
+  exit 1
+fi
+
+curl -H "GITHUB_TOKEN: ${GH_TOKEN}" -F "file=@${FILE}" http://localhost:5000/
