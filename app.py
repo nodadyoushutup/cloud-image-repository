@@ -14,6 +14,10 @@ import hashlib
 
 # Expected GitHub token for uploads
 EXPECTED_TOKEN = os.environ.get('CLOUD_REPOSITORY_APIKEY')
+GITHUB_OAUTH_CLIENT_ID = os.environ.get(
+    'GITHUB_OAUTH_CLIENT_ID', "Ov23ligIOwzpGYVkuvyu")
+GITHUB_OAUTH_CLIENT_SECRET = os.environ.get(
+    'GITHUB_OAUTH_CLIENT_SECRET', "5e823eef5497b276ea4679383217ecb9a912876e")
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'secret')
