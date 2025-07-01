@@ -26,9 +26,11 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # GitHub OAuth setup
 github_bp = make_github_blueprint(
-    client_id=os.environ.get("GITHUB_OAUTH_CLIENT_ID"),
-    client_secret=os.environ.get("GITHUB_OAUTH_CLIENT_SECRET"),
+    client_id=GITHUB_OAUTH_CLIENT_ID,
+    client_secret=GITHUB_OAUTH_CLIENT_SECRET,
+    redirect_url="https://cir.nodadyoushutup.com/login/github/authorized",
 )
+app.config['PREFERRED_URL_SCHEME'] = 'https'
 app.register_blueprint(github_bp, url_prefix="/login")
 
 
