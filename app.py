@@ -1,4 +1,14 @@
-from flask import Flask, request, send_from_directory, url_for, render_template, jsonify
+from flask import (
+    Flask,
+    request,
+    send_from_directory,
+    url_for,
+    render_template,
+    jsonify,
+    redirect,
+    session,
+)
+from flask_dance.contrib.github import make_github_blueprint, github
 import os
 import hashlib
 
@@ -6,8 +16,16 @@ import hashlib
 EXPECTED_TOKEN = os.environ.get('CLOUD_REPOSITORY_APIKEY')
 
 app = Flask(__name__)
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'secret')
 UPLOAD_FOLDER = os.path.join(app.root_path, 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# GitHub OAuth setup
+github_bp = make_github_blueprint(
+    client_id=os.environ.get("GITHUB_OAUTH_CLIENT_ID"),
+    client_secret=os.environ.get("GITHUB_OAUTH_CLIENT_SECRET"),
+)
+app.register_blueprint(github_bp, url_prefix="/login")
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -47,12 +65,32 @@ def index():
             'image': f,
             'sha256': sha_name if sha_name in file_set else None
         })
-    return render_template('index.html', files=groups)
+    return render_template('index.html', files=groups, logged_in=github.authorized)
 
 
 @app.route('/files/<path:filename>')
 def uploaded_file(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
+
+
+@app.route('/logout')
+def logout():
+    session.pop('github_oauth_token', None)
+    return redirect(url_for('index'))
+
+
+@app.route('/delete/<path:filename>', methods=['POST'])
+def delete_file(filename):
+    if not github.authorized:
+        return 'Unauthorized', 403
+    safe_name = os.path.basename(filename)
+    path = os.path.join(UPLOAD_FOLDER, safe_name)
+    sha_path = path + '.sha256'
+    if os.path.exists(path):
+        os.remove(path)
+    if os.path.exists(sha_path):
+        os.remove(sha_path)
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
