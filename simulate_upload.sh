@@ -12,4 +12,5 @@ if [ -z "$CLOUD_REPOSITORY_APIKEY" ]; then
 fi
 
 echo "CLOUD_REPOSITORY_APIKEY set as ${CLOUD_REPOSITORY_APIKEY}"
-curl -H "CLOUD-REPOSITORY-APIKEY: ${CLOUD_REPOSITORY_APIKEY}" -F "file=@${FILE}" http://localhost:5000/
+curl -s -H "CLOUD-REPOSITORY-APIKEY: ${CLOUD_REPOSITORY_APIKEY}" -F "file=@${FILE}" http://localhost:5000/
+echo
