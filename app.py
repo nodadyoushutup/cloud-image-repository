@@ -1,5 +1,6 @@
-from flask import Flask, request, send_from_directory, redirect, url_for, render_template
+from flask import Flask, request, send_from_directory, url_for, render_template, jsonify
 import os
+import hashlib
 
 # Expected GitHub token for uploads
 EXPECTED_TOKEN = os.environ.get('CLOUD_REPOSITORY_APIKEY')
@@ -22,7 +23,19 @@ def index():
             return 'No selected file', 400
         filepath = os.path.join(UPLOAD_FOLDER, file.filename)
         file.save(filepath)
-        return redirect(url_for('index'))
+
+        # Calculate sha256 and store alongside the uploaded file
+        with open(filepath, 'rb') as f:
+            digest = hashlib.sha256(f.read()).hexdigest()
+        sha_path = filepath + '.sha256'
+        with open(sha_path, 'w') as sf:
+            sf.write(digest)
+
+        return jsonify({
+            'path': url_for('uploaded_file', filename=file.filename, _external=False),
+            'sha256_file': url_for('uploaded_file', filename=file.filename + '.sha256', _external=False),
+            'sha256': digest
+        })
     files = os.listdir(UPLOAD_FOLDER)
     return render_template('index.html', files=files)
 
