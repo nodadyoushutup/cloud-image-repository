@@ -12,4 +12,4 @@ if [ -z "$GH_TOKEN" ]; then
 fi
 
 echo "GH_TOKEN set as ${GH_TOKEN}"
-curl -H "GITHUB_TOKEN: ${GH_TOKEN}" -F "file=@${FILE}" http://localhost:5000/
+curl -H "GITHUB-TOKEN: ${GH_TOKEN}" -F "file=@${FILE}" http://localhost:5000/
