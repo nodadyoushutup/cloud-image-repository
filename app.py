@@ -1,6 +1,9 @@
 from flask import Flask, request, send_from_directory, redirect, url_for, render_template
 import os
 
+# Expected GitHub token for uploads
+EXPECTED_TOKEN = os.environ.get('GH_TOKEN')
+
 app = Flask(__name__)
 UPLOAD_FOLDER = os.path.join(app.root_path, 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -8,6 +11,9 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
+        token = request.headers.get('GITHUB_TOKEN')
+        if not token or token != EXPECTED_TOKEN:
+            return 'Unauthorized', 403
         if 'file' not in request.files:
             return 'No file part', 400
         file = request.files['file']
