@@ -11,4 +11,5 @@ if [ -z "$GH_TOKEN" ]; then
   exit 1
 fi
 
+echo "GH_TOKEN set as ${GH_TOKEN}"
 curl -H "GITHUB_TOKEN: ${GH_TOKEN}" -F "file=@${FILE}" http://localhost:5000/

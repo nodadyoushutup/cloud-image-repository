@@ -8,6 +8,7 @@ app = Flask(__name__)
 UPLOAD_FOLDER = os.path.join(app.root_path, 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
@@ -25,9 +26,11 @@ def index():
     files = os.listdir(UPLOAD_FOLDER)
     return render_template('index.html', files=files)
 
+
 @app.route('/files/<path:filename>')
 def uploaded_file(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
