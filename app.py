@@ -11,6 +11,8 @@ from flask import (
 from flask_dance.contrib.github import make_github_blueprint, github
 import os
 import hashlib
+from werkzeug.middleware.proxy_fix import ProxyFix
+
 
 # Expected GitHub token for uploads
 EXPECTED_TOKEN = os.environ.get('CLOUD_REPOSITORY_APIKEY')
@@ -18,8 +20,11 @@ GITHUB_OAUTH_CLIENT_ID = os.environ.get(
     'GITHUB_OAUTH_CLIENT_ID', "Ov23ligIOwzpGYVkuvyu")
 GITHUB_OAUTH_CLIENT_SECRET = os.environ.get(
     'GITHUB_OAUTH_CLIENT_SECRET', "5e823eef5497b276ea4679383217ecb9a912876e")
+GITHUB_OAUTH_REDIRECT_URL = os.environ.get(
+    'GITHUB_OAUTH_REDIRECT_URL', "https://cir.nodadyoushutup.com")
 
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'secret')
 UPLOAD_FOLDER = os.path.join(app.root_path, 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -28,7 +33,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 github_bp = make_github_blueprint(
     client_id=GITHUB_OAUTH_CLIENT_ID,
     client_secret=GITHUB_OAUTH_CLIENT_SECRET,
-    redirect_url="https://cir.nodadyoushutup.com/login/github/authorized",
+    redirect_url=GITHUB_OAUTH_REDIRECT_URL,
 )
 app.config['PREFERRED_URL_SCHEME'] = 'https'
 app.register_blueprint(github_bp, url_prefix="/login")
