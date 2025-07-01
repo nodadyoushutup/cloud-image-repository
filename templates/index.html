@@ -8,13 +8,29 @@
 <body class="bg-gray-900 text-gray-100 min-h-screen">
     <div class="p-4">
         <h1 class="text-3xl font-bold mb-4">NoDadYouShutUp Cloud Image Repository</h1>
-        <ul class="mb-6 space-y-1">
+        <input id="filterInput" type="text" placeholder="Filter files..." class="mb-4 px-2 py-1 text-gray-900 rounded" />
+        <ul id="fileList" class="mb-6 space-y-1">
             {% for file in files %}
-            <li><a class="block px-2 py-1 rounded hover:bg-gray-800" href="{{ url_for('uploaded_file', filename=file) }}">{{ file }}</a></li>
+            <li data-name="{{ file.image }}" class="space-x-2">
+                <a class="px-2 py-1 rounded hover:bg-gray-800" href="{{ url_for('uploaded_file', filename=file.image) }}">{{ file.image }}</a>
+                {% if file.sha256 %}
+                <a class="px-2 py-1 rounded hover:bg-gray-800" href="{{ url_for('uploaded_file', filename=file.sha256) }}">{{ file.sha256 }}</a>
+                {% endif %}
+            </li>
             {% else %}
             <li>No files uploaded.</li>
             {% endfor %}
         </ul>
+        <script>
+        const input = document.getElementById('filterInput');
+        input.addEventListener('input', () => {
+            const filter = input.value.toLowerCase();
+            document.querySelectorAll('#fileList > li[data-name]').forEach(li => {
+                const text = li.getAttribute('data-name').toLowerCase();
+                li.style.display = text.includes(filter) ? '' : 'none';
+            });
+        });
+        </script>
     </div>
 </body>
 </html>

@@ -37,7 +37,17 @@ def index():
             'sha256': digest
         })
     files = os.listdir(UPLOAD_FOLDER)
-    return render_template('index.html', files=files)
+    groups = []
+    file_set = set(files)
+    for f in sorted(files):
+        if f.endswith('.sha256'):
+            continue
+        sha_name = f + '.sha256'
+        groups.append({
+            'image': f,
+            'sha256': sha_name if sha_name in file_set else None
+        })
+    return render_template('index.html', files=groups)
 
 
 @app.route('/files/<path:filename>')
