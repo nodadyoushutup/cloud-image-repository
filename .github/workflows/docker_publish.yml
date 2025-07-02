@@ -1,0 +1,53 @@
+name: Build and Publish Docker
+
+on:
+  push:
+    tags:
+      - '*'
+  workflow_run:
+    workflows: ["Create Tag"]
+    types:
+      - completed
+
+jobs:
+  build-and-push:
+    # Run when a tag is pushed manually or when the Create Tag workflow completes successfully
+    if: github.event_name == 'push' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # For workflow_run trigger, check out the commit used in the Create Tag workflow
+          ref: ${{ github.event.workflow_run.head_sha || github.ref }}
+          fetch-depth: 0
+      - name: Determine tag
+        id: get-tag
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "TAG=${{ github.ref_name }}" >> "$GITHUB_ENV"
+          else
+            git fetch --tags
+            TAG=$(git tag --points-at ${{ github.event.workflow_run.head_sha }} | head -n 1)
+            echo "TAG=$TAG" >> "$GITHUB_ENV"
+          fi
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/cloud-image-repository:${{ env.TAG }}
+            ghcr.io/${{ github.repository_owner }}/cloud-image-repository:latest
