@@ -3,7 +3,6 @@ set -eo pipefail
 
 echo "Starting entrypoint..."
 echo "::CIR_ENTRYPOINT_START::"
-
 to_lower() { echo "$1" | tr '[:upper:]' '[:lower:]'; }
 
 should_run_backend=false
