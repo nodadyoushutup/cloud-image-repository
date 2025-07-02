@@ -13,7 +13,7 @@
             <div class="space-x-4">
                 {% if github_conn.authorized %}
                 <span>{{ github_user.name }}</span>
-                <a href="{{ url_for('logout') }}" class="text-sm text-gray-400 hover:text-gray-200">Logout</a>
+                <a href="{{ url_for('main.logout') }}" class="text-sm text-gray-400 hover:text-gray-200">Logout</a>
                 {% else %}
                 <a href="{{ url_for('github.login') }}" class="text-sm text-gray-400 hover:text-gray-200">Login</a>
                 {% endif %}
@@ -29,7 +29,7 @@
                 <a class="px-2 py-1 rounded hover:bg-gray-800" href="{{ url_for('static', filename=file.sha256) }}">{{ file.sha256 }}</a>
                 {% endif %}
                 {% if github_conn.authorized %}
-                <form method="post" action="{{ url_for('delete_file', filename=file.image) }}" class="">
+                <form method="post" action="{{ url_for('main.delete_file', filename=file.image) }}" class="">
                     <button type="submit" class="text-red-500 hover:text-red-700 ml-2 h-4">
                         <i class="fa-solid fa-trash"></i>
                     </button>
