@@ -17,8 +17,8 @@ The server returns JSON similar to:
 
 ```json
 {
-  "path": "files/cloud-image-x86-64-jammy-0.1.33.img",
-  "sha256_file": "files/cloud-image-x86-64-jammy-0.1.33.img.sha256",
+  "path": "public/cloud-image-x86-64-jammy-0.1.33.img",
+  "sha256_file": "public/cloud-image-x86-64-jammy-0.1.33.img.sha256",
   "sha256": "..."
 }
 ```

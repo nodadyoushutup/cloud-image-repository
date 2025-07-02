@@ -36,4 +36,4 @@ export CLOUD_REPOSITORY_APIKEY="$(./generate_api_key.sh)"
 ./simulate_upload.sh path/to/your-image.img
 ```
 
-The response from the server will be a JSON object containing the path of the uploaded file and the path to a `sha256` file containing the checksum. Both will be located under the `uploads/` directory and can be used as assets for a GitHub release.
+The response from the server will be a JSON object containing the path of the uploaded file and the path to a `sha256` file containing the checksum. Both will be located under the `public/` directory and can be used as assets for a GitHub release.
