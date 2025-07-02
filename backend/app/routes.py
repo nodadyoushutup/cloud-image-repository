@@ -12,7 +12,7 @@ def index():
     groups = []
     file_set = set(files)
     for f in sorted(files):
-        if f.endswith('.sha256'):
+        if f.endswith('.sha256') or f.endswith('.gitkeep'):
             continue
         sha_name = f + '.sha256'
         groups.append({

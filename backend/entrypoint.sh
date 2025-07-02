@@ -2,12 +2,9 @@
 set -eo pipefail
 
 echo "::CIR_ENTRYPOINT_START::"
+echo $DEV_MODE
 cd "$(dirname "$0")"
 export PYTHONPATH="/app:$PYTHONPATH"
-
-HLS_MODE="${HLS_MODE:-false}"
-to_lower() { echo "$1" | tr '[:upper:]' '[:lower:]'; }
-echo "HLS_MODE is set to: $HLS_MODE"
 
 if [ -f .env ]; then
   echo "📦 Loading environment variables from .env"
