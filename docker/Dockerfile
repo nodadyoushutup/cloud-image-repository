@@ -10,7 +10,6 @@ RUN apt-get update \
       python3 python3-pip python3-dev \
       nodejs \
       git \
-      ffmpeg \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
