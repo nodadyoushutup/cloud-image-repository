@@ -1,0 +1,31 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "docker-compose-up",
+      "type": "shell",
+      "command": "docker compose -f docker/docker-compose.yaml up cloud-image-repository-development --build --remove-orphans",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "test",
+        "fileLocation": "relative",
+        "pattern": [
+          {
+            "regexp": "(.*)",
+            "file": 1,
+            "message": 1,
+            "line": 1
+          }
+        ],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "PUBLEX_ENTRYPOINT_START",
+          "endsPattern": "PUBLEX_BACKEND_RUNNING"
+        }
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    }
+  ]
+}

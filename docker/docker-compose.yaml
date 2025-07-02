@@ -1,0 +1,32 @@
+services:
+  cloud-image-repository-development:
+    image: "${IMAGE}"
+    container_name: cloud-image-repository-development
+    environment:
+      DEV_MODE: "${DEV_MODE}"
+      SECRET_KEY: "${SECRET_KEY}"
+      CLOUD_REPOSITORY_APIKEY: "${CLOUD_REPOSITORY_APIKEY}"
+      GITHUB_OAUTH_CLIENT_ID: "${GITHUB_OAUTH_CLIENT_ID}"
+      GITHUB_OAUTH_CLIENT_SECRET: "${GITHUB_OAUTH_CLIENT_SECRET}"
+      GITHUB_OAUTH_REDIRECT_URL: "${GITHUB_OAUTH_REDIRECT_URL}"
+    volumes:
+      - ../public:/app/public
+      - ../backend:/app/backend
+      - ../frontend:/app/frontend
+      - ../docker/entrypoint.sh:/app/entrypoint.sh
+      - nfs-media:/media
+    ports:
+      - "5000:5000"
+      - "5173:5173"
+      - "5678:5678"
+    depends_on:
+      # - postgres
+      - publex-development-redis
+    entrypoint: ["/app/entrypoint.sh"]
+    networks:
+      - shared
+
+networks:
+  shared:
+    external: true
+    name: shared-network

@@ -15,7 +15,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 
 # Expected GitHub token for uploads
-EXPECTED_TOKEN = os.environ.get('CLOUD_REPOSITORY_APIKEY')
+CLOUD_REPOSITORY_APIKEY = os.environ.get('CLOUD_REPOSITORY_APIKEY')
 GITHUB_OAUTH_CLIENT_ID = os.environ.get(
     'GITHUB_OAUTH_CLIENT_ID', "Ov23ligIOwzpGYVkuvyu")
 GITHUB_OAUTH_CLIENT_SECRET = os.environ.get(
@@ -67,7 +67,7 @@ def index():
 @app.route('/upload', methods=['POST'])
 def upload():
     token = request.headers.get('CLOUD-REPOSITORY-APIKEY')
-    if not token or token != EXPECTED_TOKEN:
+    if not token or token != CLOUD_REPOSITORY_APIKEY:
         return 'Unauthorized', 403
     if 'file' not in request.files:
         return 'No file part', 400
