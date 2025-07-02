@@ -12,16 +12,11 @@ services:
     volumes:
       - ../public:/app/public
       - ../backend:/app/backend
-      - ../frontend:/app/frontend
       - ../docker/entrypoint.sh:/app/entrypoint.sh
-      - nfs-media:/media
     ports:
       - "5000:5000"
       - "5173:5173"
       - "5678:5678"
-    depends_on:
-      # - postgres
-      - publex-development-redis
     entrypoint: ["/app/entrypoint.sh"]
     networks:
       - shared

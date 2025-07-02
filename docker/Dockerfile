@@ -15,7 +15,7 @@ RUN apt-get update \
 WORKDIR /app
 
 COPY backend/ ./backend/
-COPY docker/run.py ./run.py
+COPY public/ ./public/
 COPY docker/entrypoint.sh .
 RUN chmod +x entrypoint.sh
 

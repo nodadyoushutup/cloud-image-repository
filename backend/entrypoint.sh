@@ -5,8 +5,6 @@ echo "::CIR_ENTRYPOINT_START::"
 cd "$(dirname "$0")"
 export PYTHONPATH="/app:$PYTHONPATH"
 
-export GEVENT_SUPPORT="true"
-
 HLS_MODE="${HLS_MODE:-false}"
 to_lower() { echo "$1" | tr '[:upper:]' '[:lower:]'; }
 echo "HLS_MODE is set to: $HLS_MODE"
@@ -48,7 +46,6 @@ if [[ "${DEV_MODE}" == "true" ]]; then
 else
   echo "🔧 PROD_MODE: launching via Gunicorn"
   gunicorn run:app \
-    -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker \
     --preload \
     -w 1 \
     -b 0.0.0.0:5000 &

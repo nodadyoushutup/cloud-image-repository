@@ -3,15 +3,18 @@ from flask import Flask
 from flask_dance.contrib.github import make_github_blueprint
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from .routes import main_bp
+from app.routes import main_bp
 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__,
+        static_folder="../../public",
+        static_url_path="/public"
+    )
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
     app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'secret')
 
-    upload_folder = os.path.join(app.root_path, 'uploads')
+    upload_folder = os.path.join(app.root_path, 'public')
     os.makedirs(upload_folder, exist_ok=True)
     app.config['UPLOAD_FOLDER'] = upload_folder
     app.config['CLOUD_REPOSITORY_APIKEY'] = os.environ.get('CLOUD_REPOSITORY_APIKEY')
