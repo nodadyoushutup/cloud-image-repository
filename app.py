@@ -76,6 +76,7 @@ def index():
             'image': f,
             'sha256': sha_name if sha_name in file_set else None
         })
+    groups.reverse()
     return render_template('index.html', files=groups, logged_in=github.authorized)
 
 
