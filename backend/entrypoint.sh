@@ -3,6 +3,7 @@ set -eo pipefail
 
 echo "::CIR_ENTRYPOINT_START::"
 cd "$(dirname "$0")"
+export PYTHONPATH="/app:$PYTHONPATH"
 
 export GEVENT_SUPPORT="true"
 
@@ -39,7 +40,7 @@ if [[ "${DEV_MODE}" == "true" ]]; then
   echo "⚙️ DEV_MODE: launching via python run.py with debugpy"
   python3 -u -m debugpy \
     --listen 0.0.0.0:5678 \
-    run.py &
+    ../run.py &
   BACKEND_PID=$!
   sleep 1
   echo "::CIR_BACKEND_RUNNING::"

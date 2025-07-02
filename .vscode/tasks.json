@@ -19,8 +19,8 @@
         ],
         "background": {
           "activeOnStart": true,
-          "beginsPattern": "PUBLEX_ENTRYPOINT_START",
-          "endsPattern": "PUBLEX_BACKEND_RUNNING"
+          "beginsPattern": "CIR_ENTRYPOINT_START",
+          "endsPattern": "CIR_BACKEND_RUNNING"
         }
       },
       "options": {
