@@ -13,7 +13,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-The application listens on port `5000` by default. Visit `http://localhost:5000/` to see the list of uploaded files and use the upload form.
+The application listens on port `5000` by default. Visit `http://localhost:5000/` to see the list of uploaded files.
 
 ### Generate an API key
 
@@ -29,7 +29,7 @@ variable.
 
 ### Simulate an Upload
 
-Use the `simulate_upload.sh` script to send a file to the server, simulating an upload from a GitHub Action. Set the `CLOUD_REPOSITORY_APIKEY` environment variable to the API key expected by the server:
+Use the `simulate_upload.sh` script to send a file to the server, simulating an upload from a GitHub Action. Images are uploaded with a `POST` request to the `/upload` endpoint. Set the `CLOUD_REPOSITORY_APIKEY` environment variable to the API key expected by the server:
 
 ```bash
 export CLOUD_REPOSITORY_APIKEY="$(./generate_api_key.sh)"
