@@ -53,7 +53,15 @@ def index():
             'sha256': sha_name if sha_name in file_set else None
         })
     groups.reverse()
-    return render_template('index.html', files=groups, logged_in=github.authorized)
+
+    # Get GitHub username if authorized
+    github_user = None
+    if github.authorized:
+        resp = github.get("/user")
+        if resp.ok:
+            github_user = resp.json()
+
+    return render_template('index.html', files=groups, github_conn=github, github_user=github_user)
 
 
 @app.route('/upload', methods=['POST'])
