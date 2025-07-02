@@ -24,9 +24,9 @@
         <ul id="fileList" class="mb-6 space-y-1">
             {% for file in files %}
             <li data-name="{{ file.image }}" class="flex items-center">
-                <a class="px-2 py-1 rounded hover:bg-gray-800" href="{{ url_for('uploaded_file', filename=file.image) }}">{{ file.image }}</a>               
+                <a class="px-2 py-1 rounded hover:bg-gray-800" href="{{ url_for('static', filename=file.image) }}">{{ file.image }}</a>
                 {% if file.sha256 %}
-                <a class="px-2 py-1 rounded hover:bg-gray-800" href="{{ url_for('uploaded_file', filename=file.sha256) }}">{{ file.sha256 }}</a>
+                <a class="px-2 py-1 rounded hover:bg-gray-800" href="{{ url_for('static', filename=file.sha256) }}">{{ file.sha256 }}</a>
                 {% endif %}
                 {% if github_conn.authorized %}
                 <form method="post" action="{{ url_for('delete_file', filename=file.image) }}" class="">

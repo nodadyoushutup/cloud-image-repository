@@ -1,13 +1,13 @@
 import os
 import hashlib
-from flask import Blueprint, request, send_from_directory, url_for, render_template, jsonify, redirect, session, current_app
+from flask import Blueprint, request, url_for, render_template, jsonify, redirect, session, current_app
 from flask_dance.contrib.github import github
 
 main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/', methods=['GET'])
 def index():
-    upload_folder = current_app.config['UPLOAD_FOLDER']
+    upload_folder = current_app.static_folder
     files = os.listdir(upload_folder)
     groups = []
     file_set = set(files)
@@ -40,7 +40,7 @@ def upload():
     file = request.files['file']
     if file.filename == '':
         return 'No selected file', 400
-    upload_folder = current_app.config['UPLOAD_FOLDER']
+    upload_folder = current_app.static_folder
     filepath = os.path.join(upload_folder, file.filename)
     file.save(filepath)
 
@@ -51,15 +51,15 @@ def upload():
         sf.write(digest)
 
     return jsonify({
-        'path': url_for('main.uploaded_file', filename=file.filename, _external=False),
-        'sha256_file': url_for('main.uploaded_file', filename=file.filename + '.sha256', _external=False),
+        'path': url_for('static', filename=file.filename, _external=False),
+        'sha256_file': url_for('static', filename=file.filename + '.sha256', _external=False),
         'sha256': digest
     })
 
 @main_bp.route('/files/<path:filename>')
 def uploaded_file(filename):
-    upload_folder = current_app.config['UPLOAD_FOLDER']
-    return send_from_directory(upload_folder, filename)
+    # Redirect legacy /files routes to the static /public location
+    return redirect(url_for('static', filename=filename))
 
 @main_bp.route('/logout')
 def logout():
@@ -71,7 +71,7 @@ def delete_file(filename):
     if not github.authorized:
         return 'Unauthorized', 403
     safe_name = os.path.basename(filename)
-    upload_folder = current_app.config['UPLOAD_FOLDER']
+    upload_folder = current_app.static_folder
     path = os.path.join(upload_folder, safe_name)
     sha_path = path + '.sha256'
     if os.path.exists(path):
