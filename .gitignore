@@ -3,3 +3,4 @@ venv/
 __pycache__/
 *.img
 *.sha256
+*.env
