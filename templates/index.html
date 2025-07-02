@@ -17,7 +17,7 @@
             {% endif %}
         </div>
         <input id="filterInput" type="text" placeholder="Filter files..." class="mb-4 px-2 py-1 text-gray-900 rounded" />
-        <ul id="fileList" class="mb-6 space-y-2">
+        <ul id="fileList" class="mb-6 space-y-1">
             {% for file in files %}
             <li data-name="{{ file.image }}" class="items-center space-y-2">
                 <div>
@@ -30,13 +30,11 @@
                 </div>
                 
                 {% endif %}
-                {% if logged_in %}
                 <form method="post" action="{{ url_for('delete_file', filename=file.image) }}" class="inline">
                     <button type="submit" class="text-red-500 hover:text-red-700 ml-2">
                         <i class="fas fa-times"></i>
                     </button>
                 </form>
-                {% endif %}
             </li>
             {% else %}
             <li>No files uploaded.</li>
