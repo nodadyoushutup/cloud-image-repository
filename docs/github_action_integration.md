@@ -10,7 +10,7 @@ This document describes how to interact with the cloud-image-repository from a G
 ```bash
 curl -H "CLOUD-REPOSITORY-APIKEY: ${{ secrets.CLOUD_REPOSITORY_APIKEY }}" \
      -F "file=@path/to/image.img" \
-     https://your-repo-host.tld/
+     https://your-repo-host.tld/upload
 ```
 
 The server returns JSON similar to:
@@ -33,7 +33,7 @@ The server returns JSON similar to:
   run: |
     response=$(curl -s -H "CLOUD-REPOSITORY-APIKEY: ${{ secrets.CLOUD_REPOSITORY_APIKEY }}" \
                    -F "file=@${{ steps.build.outputs.image }}" \
-                   https://your-repo-host.tld/)
+                   https://your-repo-host.tld/upload)
     echo "response=$response" >> "$GITHUB_OUTPUT"
 ```
 

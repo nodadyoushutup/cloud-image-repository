@@ -39,32 +39,8 @@ app.config['PREFERRED_URL_SCHEME'] = 'https'
 app.register_blueprint(github_bp, url_prefix="/login")
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
 def index():
-    if request.method == 'POST':
-        token = request.headers.get('CLOUD-REPOSITORY-APIKEY')
-        if not token or token != EXPECTED_TOKEN:
-            return 'Unauthorized', 403
-        if 'file' not in request.files:
-            return 'No file part', 400
-        file = request.files['file']
-        if file.filename == '':
-            return 'No selected file', 400
-        filepath = os.path.join(UPLOAD_FOLDER, file.filename)
-        file.save(filepath)
-
-        # Calculate sha256 and store alongside the uploaded file
-        with open(filepath, 'rb') as f:
-            digest = hashlib.sha256(f.read()).hexdigest()
-        sha_path = filepath + '.sha256'
-        with open(sha_path, 'w') as sf:
-            sf.write(digest)
-
-        return jsonify({
-            'path': url_for('uploaded_file', filename=file.filename, _external=False),
-            'sha256_file': url_for('uploaded_file', filename=file.filename + '.sha256', _external=False),
-            'sha256': digest
-        })
     files = os.listdir(UPLOAD_FOLDER)
     groups = []
     file_set = set(files)
@@ -78,6 +54,33 @@ def index():
         })
     groups.reverse()
     return render_template('index.html', files=groups, logged_in=github.authorized)
+
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    token = request.headers.get('CLOUD-REPOSITORY-APIKEY')
+    if not token or token != EXPECTED_TOKEN:
+        return 'Unauthorized', 403
+    if 'file' not in request.files:
+        return 'No file part', 400
+    file = request.files['file']
+    if file.filename == '':
+        return 'No selected file', 400
+    filepath = os.path.join(UPLOAD_FOLDER, file.filename)
+    file.save(filepath)
+
+    # Calculate sha256 and store alongside the uploaded file
+    with open(filepath, 'rb') as f:
+        digest = hashlib.sha256(f.read()).hexdigest()
+    sha_path = filepath + '.sha256'
+    with open(sha_path, 'w') as sf:
+        sf.write(digest)
+
+    return jsonify({
+        'path': url_for('uploaded_file', filename=file.filename, _external=False),
+        'sha256_file': url_for('uploaded_file', filename=file.filename + '.sha256', _external=False),
+        'sha256': digest
+    })
 
 
 @app.route('/files/<path:filename>')
