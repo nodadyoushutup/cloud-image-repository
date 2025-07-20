@@ -5,8 +5,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="${SCRIPT_DIR}/.."
 
-# Optional tag argument, default to publex:latest
-TAG="${1:-publex:latest}"
+# Optional tag argument, default to cloud-image-repository:latest
+TAG="${1:-cloud-image-repository:latest}"
 
 echo "🛠️  Building Docker image '$TAG'…"
 

@@ -1,6 +1,6 @@
 services:
   cloud-image-repository-development:
-    image: "${IMAGE}"
+    image: "cloud-image-repository:latest"
     container_name: cloud-image-repository-development
     environment:
       DEV_MODE: "${DEV_MODE}"
@@ -14,14 +14,7 @@ services:
       - ../backend:/app/backend
       - ../docker/entrypoint.sh:/app/entrypoint.sh
     ports:
-      - "5000:5000"
+      - "3918:5000"
       - "5173:5173"
       - "5678:5678"
     entrypoint: ["/app/entrypoint.sh"]
-    networks:
-      - shared
-
-networks:
-  shared:
-    external: true
-    name: shared-network
